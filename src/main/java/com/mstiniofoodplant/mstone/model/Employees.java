@@ -5,6 +5,8 @@ import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.persistence.JoinColumn;
+import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
 
 import java.time.LocalDate;
@@ -34,8 +36,15 @@ public class Employees {
     @Column(length = 255, nullable = false)
     private String email;
 
-    @Column(name = "department_id")
-    private UUID departmentId;
+    @Column(name = "contact_number", length = 30)
+    private String contactNumber;
+
+    @ManyToOne
+    @JoinColumn(name = "department_id")
+    private Department department;
+
+    @Column(name = "role", length = 50, nullable = false)
+    private String role;
 
     @Column(name = "hire_date", nullable = false)
     private LocalDate hireDate;
@@ -89,13 +98,34 @@ public class Employees {
         this.email = email;
     }
 
-    public UUID getDepartmentId() {
-        return departmentId;
+    public String getContactNumber() {
+        return contactNumber;
     }
 
-    public void setDepartmentId(UUID departmentId) {
-        this.departmentId = departmentId;
+    public void setContactNumber(String contactNumber) {
+        this.contactNumber = contactNumber;
     }
+
+    public UUID getDepartmentId() {
+        return department == null ? null : department.getId();
+    }
+
+    public Department getDepartment() {
+        return department;
+    }
+
+    public void setDepartment(Department department) {
+        this.department = department;
+    }
+
+    public String getRole() {
+        return role;
+    }
+
+    public void setRole(String role) {
+        this.role = role;
+    }
+
 
     public LocalDate getHireDate() {
         return hireDate;

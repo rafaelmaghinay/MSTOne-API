@@ -14,10 +14,6 @@ public class Users {
     @GeneratedValue(strategy =  GenerationType.UUID)
     private UUID id;
 
-    /** Identifier of the employee associated with this account. */
-    @Column(name = "employee_id")
-    private UUID employeeId;
-
     /** Unique username used to sign in. */
     @Column(length = 50, nullable = false)
     private String username;
@@ -70,14 +66,6 @@ public class Users {
 
     public void setId(UUID id) {
         this.id = id;
-    }
-
-    public UUID getEmployeeId() {
-        return employeeId;
-    }
-
-    public void setEmployeeId(UUID employeeId) {
-        this.employeeId = employeeId;
     }
 
     public String getUsername() {
