@@ -52,6 +52,9 @@ public class Employees {
     @Column(name = "employment_status", length = 30, nullable = false)
     private String employmentStatus;
 
+    @Column(name = "employment_classification")
+    private String employmentClassification;
+
     @Column(name = "created_at", nullable = false)
     private LocalDateTime createdAt;
 
@@ -110,6 +113,10 @@ public class Employees {
         return department == null ? null : department.getId();
     }
 
+    public String getDeptName() {
+        return department == null ? null : department.getDeptName();
+    }
+
     public Department getDepartment() {
         return department;
     }
@@ -165,5 +172,13 @@ public class Employees {
 
     public void setMiddleName(String middleName) {
         this.middleName = middleName;
+    }
+
+    public String getEmploymentClassification() {
+        return employmentClassification;
+    }
+
+    public void setEmploymentClassification(String employmentClassification) {
+        this.employmentClassification = employmentClassification;
     }
 }

@@ -8,4 +8,5 @@ import java.util.UUID;
 
 public interface User_RolesRepository extends JpaRepository<User_Roles,Long> {
     Optional<User_Roles> findByUserId(UUID userId);
+    void deleteByRoleId(Long roleId);
 }
