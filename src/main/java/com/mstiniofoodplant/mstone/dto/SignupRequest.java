@@ -1,5 +1,6 @@
 package com.mstiniofoodplant.mstone.dto;
 
+import com.fasterxml.jackson.annotation.JsonAlias;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -14,5 +15,7 @@ public class SignupRequest {
     private String firstName;
     private String lastName;
     private String middleName;
+
+    @JsonAlias({ "access_type", "accesstype", "role_name", "rolename" })
     private String role;
 }

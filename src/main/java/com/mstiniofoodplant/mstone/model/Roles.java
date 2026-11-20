@@ -38,12 +38,12 @@ public class Roles {
         return roleName;
     }
 
-    @JsonProperty("role_name")
-    public String getRoleNameSnakeCase() {
+    @JsonProperty("access_type")
+    public String getAccessType() {
         return roleName;
     }
 
-    @JsonAlias({ "role_name", "rolename" })
+    @JsonAlias({ "access_type", "accesstype", "role_name", "rolename" })
     public void setRoleName(String roleName) {
         this.roleName = roleName;
     }

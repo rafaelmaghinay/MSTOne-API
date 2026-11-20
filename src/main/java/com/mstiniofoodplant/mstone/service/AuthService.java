@@ -36,6 +36,9 @@ public class AuthService {
     @Autowired
     private JwtTokenProvider jwtTokenProvider;
 
+    @Autowired
+    private UserEmployeeService userEmployeeService;
+
     private static final Logger logger = LoggerFactory.getLogger(AuthService.class);
 
 
@@ -63,15 +66,20 @@ public class AuthService {
         // Create new user
         Users newUser = userService.createUser(email, username, firstName, lastName, middleName != null ? middleName : "", passwordHash);
 
-        String requestedRole = role == null || role.trim().isEmpty() ? "EMPLOYEE" : role.trim();
-        Roles assignedRole = rolesRepository.findByRoleName(requestedRole)
-                .orElseThrow(() -> new IllegalArgumentException("Role not found: " + requestedRole));
+        String requestedRole = role == null || role.trim().isEmpty() ? "Employee" : role.trim();
+        Roles assignedRole = rolesRepository.findByRoleNameIgnoreCase(requestedRole)
+                .or(() -> rolesRepository.findByRoleName(requestedRole))
+                .orElseGet(() -> rolesRepository.findByRoleNameIgnoreCase("Employee")
+                        .orElseThrow(() -> new IllegalArgumentException("Role not found: " + requestedRole)));
         User_Roles userRole = new User_Roles();
         userRole.setUserId(newUser.getId());
         userRole.setRoleId(assignedRole.getId());
         userRolesRepository.save(userRole);
 
-        logger.info("User registered successfully: {} ({})", email, newUser.getId());
+        // Automatically link user_employees if employee profile with matching email exists
+        userEmployeeService.findOrAutoLinkEmployee(newUser.getId(), newUser.getEmail());
+
+        logger.info("User registered successfully: {} ({}) with role {}", email, newUser.getId(), assignedRole.getRoleName());
 
         // Generate JWT token
         String jwtToken = jwtTokenProvider.generateToken(newUser.getId(), newUser.getEmail());
@@ -82,6 +90,7 @@ public class AuthService {
                 newUser.getId(),
                 newUser.getEmail(),
                 newUser.getFirstName(),
+                assignedRole.getRoleName(),
                 expirationTime);
     }
 
@@ -103,12 +112,19 @@ public class AuthService {
         user.setFailedLoginAttempts(0);
         userService.save(user);
 
+        String roleName = userRolesRepository.findAllByUserId(user.getId()).stream()
+                .findFirst()
+                .flatMap(ur -> rolesRepository.findById(ur.getRoleId()))
+                .map(Roles::getRoleName)
+                .orElse("Employee");
+
         String jwtToken = jwtTokenProvider.generateToken(user.getId(), user.getEmail());
         return AuthResponse.of(
                 jwtToken,
                 user.getId(),
                 user.getEmail(),
                 user.getFirstName(),
+                roleName,
                 jwtTokenProvider.getExpirationTime());
     }
 }

@@ -55,6 +55,15 @@ public class Employees {
     @Column(name = "employment_classification")
     private String employmentClassification;
 
+    @Column(name = "ss_number", length = 30)
+    private String ssNumber;
+
+    @Column(name = "tin", length = 30)
+    private String tin;
+
+    @Column(name = "philhealth_number", length = 30)
+    private String philhealthNumber;
+
     @Column(name = "created_at", nullable = false)
     private LocalDateTime createdAt;
 
@@ -180,5 +189,29 @@ public class Employees {
 
     public void setEmploymentClassification(String employmentClassification) {
         this.employmentClassification = employmentClassification;
+    }
+
+    public String getSsNumber() {
+        return ssNumber;
+    }
+
+    public void setSsNumber(String ssNumber) {
+        this.ssNumber = ssNumber;
+    }
+
+    public String getTin() {
+        return tin;
+    }
+
+    public void setTin(String tin) {
+        this.tin = tin;
+    }
+
+    public String getPhilhealthNumber() {
+        return philhealthNumber;
+    }
+
+    public void setPhilhealthNumber(String philhealthNumber) {
+        this.philhealthNumber = philhealthNumber;
     }
 }
